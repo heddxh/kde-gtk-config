@@ -18,7 +18,10 @@ class ConfigValueProvider
 public:
     ConfigValueProvider();
 
+    QMap<QString, bool> syncedOptions() const;
+
     QString fontName() const;
+    double textScalingFactor() const;
     QString iconThemeName() const;
     QString cursorThemeName() const;
     QString soundThemeName() const;
@@ -56,6 +59,7 @@ private:
     KSharedConfigPtr fontsConfig;
     KSharedConfigPtr inputConfig;
     KSharedConfigPtr kwinConfig;
+    KSharedConfigPtr kdeGtkConfig;
 
     QTemporaryDir generatedCSDTempPath;
 };

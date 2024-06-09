@@ -36,8 +36,20 @@ ConfigValueProvider::ConfigValueProvider()
     , fontsConfig(KSharedConfig::openConfig(QStringLiteral("kcmfonts")))
     , inputConfig(KSharedConfig::openConfig(QStringLiteral("kcminputrc")))
     , kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
+    , kdeGtkConfig(KSharedConfig::openConfig(QStringLiteral("kdegtkrc"), KConfig::NoGlobals))
     , generatedCSDTempPath(QDir::tempPath() + QStringLiteral("/plasma-csd-generator"))
 {
+}
+
+QMap<QString, bool> ConfigValueProvider::syncedOptions() const
+{
+    KConfigGroup configGroup = kdeGtkConfig->group(QStringLiteral("General"));
+    QMap<QString, bool> options = {};
+    for (QString option : configGroup.entryMap().keys()) {
+        options[option] = configGroup.readEntry(option, true);
+    }
+
+    return options;
 }
 
 QString ConfigValueProvider::fontName() const
@@ -50,6 +62,12 @@ QString ConfigValueProvider::fontName() const
     font.fromString(fontAsString);
     const QString fontStyle = fontStyleHelper(font);
     return font.family() + QStringLiteral(", ") + fontStyle + ' ' + QString::number(font.pointSize());
+}
+
+double ConfigValueProvider::textScalingFactor() const
+{
+    KConfigGroup configGroup = kdeGtkConfig->group(QStringLiteral("Options"));
+    return configGroup.readEntry(QStringLiteral("TextScale"), .0f);
 }
 
 QString ConfigValueProvider::fontStyleHelper(const QFont &font) const
