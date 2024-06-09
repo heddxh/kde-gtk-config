@@ -280,10 +280,21 @@ void GtkConfig::setTextScale() const
         waylandTextScaleFactor = std::clamp(waylandTextScaleFactor, 0.5, 3.0);
     }
 
+    double textScalingFactor = waylandTextScaleFactor;
+    const double textScalingFactorConfigValue = configValueProvider->textScalingFactor();
+
+    qCDebug(LOG_GTKCONFIG) << "textScalingFactorConfigValue:" << textScalingFactorConfigValue;
+
+    if (!(configValueProvider->syncedOptions().value(QStringLiteral("TextScale"))) && textScalingFactorConfigValue != 0) {
+        textScalingFactor = textScalingFactorConfigValue;
+    }
+
+    qCDebug(LOG_GTKCONFIG) << "textScalingFactor:" << textScalingFactor;
+
     XSettingsEditor::unsetValue(QStringLiteral("Xft/DPI"));
     SettingsIniEditor::setValue(QStringLiteral("gtk-xft-dpi"), x11TextDpiAbsolute);
     XSettingsEditor::setValue(QStringLiteral("Gdk/UnscaledDPI"), x11TextDpiAbsolute / x11ScaleIntegerPart);
-    GSettingsEditor::setValue("text-scaling-factor", waylandTextScaleFactor);
+    GSettingsEditor::setValue("text-scaling-factor", std::round(textScalingFactor * 100) / 100); // FIXME:Double precise
 }
 
 void GtkConfig::setColors() const
@@ -416,6 +427,16 @@ void GtkConfig::onBreezeSettingsChange(const KConfigGroup &group, const QByteArr
     if (group.name() == QStringLiteral("Common") //
         && names.contains("OutlineCloseButton")) {
         setWindowDecorationsAppearance();
+    }
+}
+
+void GtkConfig::onKdeGtkSettingsChange(const KConfigGroup &group, const QByteArrayList &names) const
+{
+    qCDebug(LOG_GTKCONFIG) << "Group:" << group.name() << "Names:" << names;
+    if ((group.name() == QStringLiteral("General"))) {
+        if (names.contains("TextScale")) {
+            setTextScale();
+        }
     }
 }
 
