@@ -21,6 +21,8 @@
 #include <gtk/gtk.h>
 
 #include <algorithm>
+#include <kconfiggroup.h>
+#include <qstringliteral.h>
 
 #include "configvalueprovider.h"
 #include "decorationpainter.h"
@@ -56,8 +58,17 @@ QString ConfigValueProvider::fontName() const
 {
     static const QFont defaultFont(QStringLiteral("Noto Sans"), 10);
 
-    KConfigGroup configGroup = kdeglobalsConfig->group(QStringLiteral("General"));
-    QString fontAsString = configGroup.readEntry(QStringLiteral("font"), defaultFont.toString());
+    KConfigGroup globalConfigGroup = kdeglobalsConfig->group(QStringLiteral("General"));
+    KConfigGroup kdegtkConfigGroup = kdeGtkConfig->group(QStringLiteral("General"));
+
+    const bool isFontSynced = kdegtkConfigGroup.readEntry(QStringLiteral("Font"), false);
+
+    QString fontAsString;
+    if (isFontSynced) {
+        fontAsString = globalConfigGroup.readEntry(QStringLiteral("font"), defaultFont.toString());
+    } else {
+        fontAsString = kdegtkConfigGroup.readEntry(QStringLiteral("Font"), defaultFont.toString());
+    }
     static QFont font;
     font.fromString(fontAsString);
     const QString fontStyle = fontStyleHelper(font);
