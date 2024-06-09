@@ -59,12 +59,11 @@ QString ConfigValueProvider::fontName() const
     static const QFont defaultFont(QStringLiteral("Noto Sans"), 10);
 
     KConfigGroup globalConfigGroup = kdeglobalsConfig->group(QStringLiteral("General"));
-    KConfigGroup kdegtkConfigGroup = kdeGtkConfig->group(QStringLiteral("General"));
-
-    const bool isFontSynced = kdegtkConfigGroup.readEntry(QStringLiteral("Font"), false);
+    KConfigGroup isSyncCOnfigGroup = kdeGtkConfig->group(QStringLiteral("General"));
+    KConfigGroup kdegtkConfigGroup = kdeGtkConfig->group(QStringLiteral("Options"));
 
     QString fontAsString;
-    if (isFontSynced) {
+    if (isSyncCOnfigGroup.readEntry(QStringLiteral("Font"), false)) {
         fontAsString = globalConfigGroup.readEntry(QStringLiteral("font"), defaultFont.toString());
     } else {
         fontAsString = kdegtkConfigGroup.readEntry(QStringLiteral("Font"), defaultFont.toString());
@@ -145,11 +144,11 @@ QString ConfigValueProvider::fontStyleHelper(const QFont &font) const
 QString ConfigValueProvider::iconThemeName() const
 {
     KConfigGroup globalConfigGroup = kdeglobalsConfig->group(QStringLiteral("Icons"));
-    KConfigGroup isSyncedCOnfigGroup = kdeGtkConfig->group(QStringLiteral("General"));
+    KConfigGroup isSyncCOnfigGroup = kdeGtkConfig->group(QStringLiteral("General"));
     KConfigGroup kdegtkConfigGroup = kdeGtkConfig->group(QStringLiteral("Options"));
 
     QString iconTheme;
-    if (isSyncedCOnfigGroup.readEntry(QStringLiteral("Icon"), false)) {
+    if (isSyncCOnfigGroup.readEntry(QStringLiteral("Icon"), false)) {
         iconTheme = globalConfigGroup.readEntry(QStringLiteral("Theme"), QStringLiteral("breeze"));
     } else {
         iconTheme = kdegtkConfigGroup.readEntry(QStringLiteral("Icon"), QStringLiteral("breeze"));
@@ -160,11 +159,11 @@ QString ConfigValueProvider::iconThemeName() const
 QString ConfigValueProvider::cursorThemeName() const
 {
     KConfigGroup inputConfigGroup = inputConfig->group(QStringLiteral("Mouse"));
-    KConfigGroup isSyncedCOnfigGroup = kdeGtkConfig->group(QStringLiteral("General"));
+    KConfigGroup isSyncCOnfigGroup = kdeGtkConfig->group(QStringLiteral("General"));
     KConfigGroup kdegtkConfigGroup = kdeGtkConfig->group(QStringLiteral("Options"));
 
     QString cursorTheme;
-    if (isSyncedCOnfigGroup.readEntry(QStringLiteral("Cursor"), false)) {
+    if (isSyncCOnfigGroup.readEntry(QStringLiteral("Cursor"), false)) {
         cursorTheme = inputConfigGroup.readEntry(QStringLiteral("cursorTheme"), QStringLiteral("breeze_cursors"));
     } else {
         cursorTheme = kdegtkConfigGroup.readEntry(QStringLiteral("Cursor"), QStringLiteral("breeze_cursors"));
