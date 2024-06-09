@@ -150,8 +150,17 @@ QString ConfigValueProvider::iconThemeName() const
 
 QString ConfigValueProvider::cursorThemeName() const
 {
-    KConfigGroup configGroup = inputConfig->group(QStringLiteral("Mouse"));
-    return configGroup.readEntry(QStringLiteral("cursorTheme"), QStringLiteral("breeze_cursors"));
+    KConfigGroup inputConfigGroup = inputConfig->group(QStringLiteral("Mouse"));
+    KConfigGroup isSyncedCOnfigGroup = kdeGtkConfig->group(QStringLiteral("General"));
+    KConfigGroup kdegtkConfigGroup = kdeGtkConfig->group(QStringLiteral("Options"));
+
+    QString cursorTheme;
+    if (isSyncedCOnfigGroup.readEntry(QStringLiteral("Cursor"), false)) {
+        cursorTheme = inputConfigGroup.readEntry(QStringLiteral("cursorTheme"), QStringLiteral("breeze_cursors"));
+    } else {
+        cursorTheme = kdegtkConfigGroup.readEntry(QStringLiteral("Cursor"), QStringLiteral("breeze_cursors"));
+    }
+    return cursorTheme;
 }
 
 QString ConfigValueProvider::soundThemeName() const
