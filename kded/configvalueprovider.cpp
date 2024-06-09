@@ -144,8 +144,17 @@ QString ConfigValueProvider::fontStyleHelper(const QFont &font) const
 
 QString ConfigValueProvider::iconThemeName() const
 {
-    KConfigGroup configGroup = kdeglobalsConfig->group(QStringLiteral("Icons"));
-    return configGroup.readEntry(QStringLiteral("Theme"), QStringLiteral("breeze"));
+    KConfigGroup globalConfigGroup = kdeglobalsConfig->group(QStringLiteral("Icons"));
+    KConfigGroup isSyncedCOnfigGroup = kdeGtkConfig->group(QStringLiteral("General"));
+    KConfigGroup kdegtkConfigGroup = kdeGtkConfig->group(QStringLiteral("Options"));
+
+    QString iconTheme;
+    if (isSyncedCOnfigGroup.readEntry(QStringLiteral("Icon"), false)) {
+        iconTheme = globalConfigGroup.readEntry(QStringLiteral("Theme"), QStringLiteral("breeze"));
+    } else {
+        iconTheme = kdegtkConfigGroup.readEntry(QStringLiteral("Icon"), QStringLiteral("breeze"));
+    }
+    return iconTheme;
 }
 
 QString ConfigValueProvider::cursorThemeName() const
