@@ -55,6 +55,7 @@ public Q_SLOTS:
     void onKCMFontsSettingsChange(const KConfigGroup &group, const QByteArrayList &names) const;
     void onKCMInputSettingsChange(const KConfigGroup &group, const QByteArrayList &names) const;
     void onBreezeSettingsChange(const KConfigGroup &group, const QByteArrayList &names) const;
+    void onKdeGtkSettingsChange(const KConfigGroup &group, const QByteArrayList &names) const;
 
 private:
     QScopedPointer<ConfigValueProvider> configValueProvider;
@@ -64,6 +65,7 @@ private:
     KConfigWatcher::Ptr kcmfontsConfigWatcher;
     KConfigWatcher::Ptr kcminputConfigWatcher;
     KConfigWatcher::Ptr breezeConfigWatcher;
+    KConfigWatcher::Ptr kdegtkConfigWatcher;
     void setGtk2Theme(const QString &themeName, const bool preferDarkTheme) const;
 
     GSDXSettingsManager *m_gsdXsettingsManager = nullptr;

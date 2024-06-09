@@ -39,6 +39,7 @@ GtkConfig::GtkConfig(QObject *parent, const QVariantList &)
     , kcmfontsConfigWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("kcmfonts"))))
     , kcminputConfigWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("kcminputrc"))))
     , breezeConfigWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("breezerc"))))
+    , kdegtkConfigWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("kdegtkrc"), KConfig::NoGlobals)))
 {
     QLoggingCategory::setFilterRules(
         "*.debug=false\n"
@@ -59,6 +60,7 @@ GtkConfig::GtkConfig(QObject *parent, const QVariantList &)
     connect(kcmfontsConfigWatcher.data(), &KConfigWatcher::configChanged, this, &GtkConfig::onKCMFontsSettingsChange);
     connect(kcminputConfigWatcher.data(), &KConfigWatcher::configChanged, this, &GtkConfig::onKCMInputSettingsChange);
     connect(breezeConfigWatcher.data(), &KConfigWatcher::configChanged, this, &GtkConfig::onBreezeSettingsChange);
+    connect(kdegtkConfigWatcher.data(), &KConfigWatcher::configChanged, this, &GtkConfig::onKdeGtkSettingsChange);
 
     Gtk2ConfigEditor::removeLegacyStrings();
     applyAllSettings();
