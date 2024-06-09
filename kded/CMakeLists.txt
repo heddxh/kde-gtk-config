@@ -10,6 +10,13 @@ set(gtkconfig_SRCS
     themepreviewer.cpp
 )
 
+include(ECMQtDeclareLoggingCategory)
+ecm_qt_declare_logging_category(gtkconfig_SRCS
+    HEADER gtkconfig-debug.h
+    IDENTIFIER "LOG_GTKCONFIG"
+    CATEGORY_NAME "gtkconfig"
+)
+
 qt_add_dbus_adaptor(gtkconfig_SRCS
     gsd-xsettings-manager/org.gtk.Settings.xml
     gsd-xsettings-manager/gsd-xsettings-manager.h

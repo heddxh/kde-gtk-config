@@ -26,6 +26,7 @@
 #include "config_editor/settings_ini.h"
 #include "config_editor/xsettings.h"
 #include "gsd-xsettings-manager/gsd-xsettings-manager.h"
+#include "gtkconfig-debug.h"
 
 K_PLUGIN_CLASS_WITH_JSON(GtkConfig, "gtkconfig.json")
 
@@ -39,6 +40,12 @@ GtkConfig::GtkConfig(QObject *parent, const QVariantList &)
     , kcminputConfigWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("kcminputrc"))))
     , breezeConfigWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("breezerc"))))
 {
+    QLoggingCategory::setFilterRules(
+        "*.debug=false\n"
+        "gtkconfig.debug=true");
+
+    qCDebug(LOG_GTKCONFIG) << "Start GtkConfig KDED";
+
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerService(QStringLiteral("org.kde.GtkConfig"));
     dbus.registerObject(QStringLiteral("/GtkConfig"), this, QDBusConnection::ExportScriptableSlots);
