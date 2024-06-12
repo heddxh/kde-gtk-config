@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <qstringliteral.h>
 
 #include "config_editor/custom_css.h"
 #include "config_editor/gsettings.h"
@@ -432,8 +433,7 @@ void GtkConfig::onBreezeSettingsChange(const KConfigGroup &group, const QByteArr
 
 void GtkConfig::onKdeGtkSettingsChange(const KConfigGroup &group, const QByteArrayList &names) const
 {
-    qCDebug(LOG_GTKCONFIG) << "Group:" << group.name() << "Names:" << names;
-    if ((group.name() == QStringLiteral("General"))) {
+    if ((group.name() == QStringLiteral("General")) || group.name() == QStringLiteral("Options")) {
         if (names.contains("TextScale")) {
             setTextScale();
         }
